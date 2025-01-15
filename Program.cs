@@ -1,7 +1,10 @@
 using AutoStore.DTOs;
+using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
+
+const String getGame="GetPart";
 
 app.MapGet("/", () => "Hello World!");
 
@@ -29,7 +32,22 @@ List<ItemDTO> parts = new List<ItemDTO>
 };
 
 //get part
-app.MapGet("games/{id}",(int id) => parts.Find(part=>part.id==id));
+app.MapGet("games/{id}",(int id) => parts.Find(part=>part.id==id)).WithName(getGame);
 
+//get all parts
 app.MapGet("items" ,()=> parts);
+
+//create parts
+app.MapPost("parts",(CreateItem newItem)=>{
+    ItemDTO item=new (
+        parts.Count+1,
+         newItem.name,
+         newItem.price,
+        newItem.date
+    );
+    parts.Add(item);
+    return Results.CreatedAtRoute(getGame,new {id=item.id},item);
+});
+
+
 app.Run();
