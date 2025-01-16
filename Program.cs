@@ -32,7 +32,12 @@ List<ItemDTO> parts = new List<ItemDTO>
 };
 
 //get part
-app.MapGet("games/{id}",(int id) => parts.Find(part=>part.id==id)).WithName(getGame);
+app.MapGet("parts/{id}",(int id) =>{
+
+ ItemDTO? part =parts.Find(part=>part.id==id);
+
+ return part is null? Results.NotFound() : Results.Ok(part);
+ }).WithName(getGame);
 
 //get all parts
 app.MapGet("items" ,()=> parts);
@@ -53,6 +58,11 @@ app.MapPost("parts",(CreateItem newItem)=>{
 app.MapPut("parts/{id}",(int id,UpdateItemDTO updateItem)=>{
     var index = parts.FindIndex(part=> part.id==id);
 
+    if(index==-1)
+    {
+        return Results.NotFound();
+    }
+    
     parts[index]= new ItemDTO(
         id,
         updateItem.name,
