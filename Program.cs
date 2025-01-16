@@ -49,5 +49,30 @@ app.MapPost("parts",(CreateItem newItem)=>{
     return Results.CreatedAtRoute(getGame,new {id=item.id},item);
 });
 
+//update part
+app.MapPut("parts/{id}",(int id,UpdateItemDTO updateItem)=>{
+    var index = parts.FindIndex(part=> part.id==id);
+
+    parts[index]= new ItemDTO(
+        id,
+        updateItem.name,
+        updateItem.price,
+        updateItem.date
+    );
+
+    return Results.NoContent();
+});
+
+app.MapDelete("items/{id}", (int id) =>
+{
+    var itemToRemove = parts.FirstOrDefault(item => item.id == id);
+    if (itemToRemove != null)
+    {
+        parts.Remove(itemToRemove);
+        return Results.NoContent(); // Correctly returns an HTTP 204 response
+    }
+
+    return Results.NotFound(); // If the item is not found, return HTTP 404
+});
 
 app.Run();
