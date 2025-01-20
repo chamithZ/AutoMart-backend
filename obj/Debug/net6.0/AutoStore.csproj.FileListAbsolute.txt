@@ -19,3 +19,4 @@ C:\Users\Chamith\Documents\Success Projects\AutoMart\AutoStore\obj\Debug\net6.0\
 C:\Users\Chamith\Documents\Success Projects\AutoMart\AutoStore\obj\Debug\net6.0\AutoStore.pdb
 C:\Users\Chamith\Documents\Success Projects\AutoMart\AutoStore\obj\Debug\net6.0\AutoStore.genruntimeconfig.cache
 C:\Users\Chamith\Documents\Success Projects\AutoMart\AutoStore\obj\Debug\net6.0\ref\AutoStore.dll
+C:\Users\Chamith\Documents\Success Projects\AutoMart\AutoStore\obj\Debug\net6.0\AutoStore.MvcApplicationPartsAssemblyInfo.cs
