@@ -30,7 +30,7 @@ private static readonly List<ItemDTO> parts = new List<ItemDTO>
     )
 };
 
-public static WebApplication mapSotreENdpoints(this WebApplication app){
+public static WebApplication MapStoreEndpoints(this WebApplication app){
     //get part
     
 app.MapGet("parts/{id}",(int id) =>{
@@ -53,8 +53,8 @@ app.MapPost("parts",(CreateItem newItem)=>{
     );
     parts.Add(item);
     return Results.CreatedAtRoute(getGame,new {id=item.id},item);
-})
-.WithParameterValidation();
+});
+//not working 
 
 //update part
 app.MapPut("parts/{id}",(int id,UpdateItemDTO updateItem)=>{
