@@ -13,5 +13,15 @@ namespace AutoStore.Data
 
         public DbSet<Part> Parts => Set<Part>();
         public DbSet<PartType> PartTypes => Set<PartType>();
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<PartType>().HasData(
+                new {Id=1, Name="Engine"},
+                new {Id=2, Name="Transmission"},
+                new {Id=3, Name="Suspension"},
+                new {Id=4, Name="Brakes"}
+            );
+        }
     }
 }

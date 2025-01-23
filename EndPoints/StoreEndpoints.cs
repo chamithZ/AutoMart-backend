@@ -1,5 +1,7 @@
 using System;
+using AutoStore.Data;
 using AutoStore.DTOs;
+using AutoStore.Entities;
 
 namespace AutoStore.EndPoints;
 
@@ -44,15 +46,17 @@ app.MapGet("parts/{id}",(int id) =>{
 app.MapGet("items" ,()=> parts);
 
 //create parts
-app.MapPost("parts",(CreateItem newItem)=>{
-    ItemDTO item=new (
-        parts.Count+1,
-         newItem.name,
-         newItem.price,
-        newItem.date
-    );
-    parts.Add(item);
-    return Results.CreatedAtRoute(getGame,new {id=item.id},item);
+app.MapPost("parts",(CreateItem newItem,AutoStoreContext dbContext )=>{
+    Part item= new(){
+        Name=newItem.name,
+        PartType=dbContext.PartTypes.Find(newItem.partTypeId),
+        PartTypeId=newItem.partTypeId,
+        price=newItem.price,
+        date=newItem.date
+    };
+    dbContext.Parts.Add(item);
+    dbContext.SaveChanges();
+    return Results.CreatedAtRoute(getGame,new {id=item.Id},item);
 });
 //not working 
 
