@@ -2,6 +2,7 @@ using System;
 using AutoStore.Data;
 using AutoStore.DTOs;
 using AutoStore.Entities;
+using AutoStore.Mappings;
 
 namespace AutoStore.EndPoints;
 
@@ -15,17 +16,20 @@ private static readonly List<ItemDTO> parts = new List<ItemDTO>
     new ItemDTO(
         1,
         "Brake pads",
+        "brake",
         2000.00M,
         new DateTime(2024, 12, 02)
     ),
     new ItemDTO(
         2,
         "Ac cable",
+        "brake",
         3000.00M,
         new DateTime(2024, 12, 02)
     ),
     new ItemDTO(
         3,
+        "brake",
         "Brake cable",
         3500.00M,
         new DateTime(2024, 12, 02)
@@ -35,30 +39,30 @@ private static readonly List<ItemDTO> parts = new List<ItemDTO>
 public static WebApplication MapStoreEndpoints(this WebApplication app){
     //get part
     
-app.MapGet("parts/{id}",(int id) =>{
+app.MapGet("parts/{id}",(int id, AutoStoreContext dbContext) =>{
 
- ItemDTO? part =parts.Find(part=>part.id==id);
+ Part? part =dbContext.Parts.Find(id);
 
- return part is null? Results.NotFound() : Results.Ok(part);
+ItemDeatilsDTO itemDeatilsDTO= part.ToItemDetialsDTO();
+ return part is null? Results.NotFound() : Results.Ok(itemDeatilsDTO);
  }).WithName(getGame);
 
 //get all parts
 app.MapGet("items" ,()=> parts);
 
+
 //create parts
 app.MapPost("parts",(CreateItem newItem,AutoStoreContext dbContext )=>{
-    Part item= new(){
-        Name=newItem.name,
-        PartType=dbContext.PartTypes.Find(newItem.partTypeId),
-        PartTypeId=newItem.partTypeId,
-        price=newItem.price,
-        date=newItem.date
-    };
+
+    Part item= newItem.ToEntity();
+   // item.PartType=dbContext.PartTypes.Find(newItem.partTypeId);
+
     dbContext.Parts.Add(item);
     dbContext.SaveChanges();
-    return Results.CreatedAtRoute(getGame,new {id=item.Id},item);
+
+    return Results.CreatedAtRoute(getGame,new {id=item.Id},item.ToDto());
 });
-//not working 
+
 
 //update part
 app.MapPut("parts/{id}",(int id,UpdateItemDTO updateItem)=>{
@@ -72,6 +76,7 @@ app.MapPut("parts/{id}",(int id,UpdateItemDTO updateItem)=>{
     parts[index]= new ItemDTO(
         id,
         updateItem.name,
+        updateItem.partType.Name,
         updateItem.price,
         updateItem.date
     );
