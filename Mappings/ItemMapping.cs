@@ -15,6 +15,16 @@ public static class ItemMapping
     };
     }
 
+  public static Part ToEntity(this UpdateItemDTO item,int id) { 
+       return new Part{
+        Id=id,
+        Name=item.name,
+        PartTypeId=item.partTypeId,
+        price=item.price,
+        date=item.date
+    };
+    }
+
     public static ItemDTO ToDto(this Part part)
     {
          return new(part.Id,part.Name ?? string.Empty,part.PartType!.Name,part.price,part.date);

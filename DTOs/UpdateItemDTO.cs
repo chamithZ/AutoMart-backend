@@ -4,7 +4,7 @@ namespace AutoStore.DTOs;
 
 public record class UpdateItemDTO(
      string name,
-     PartType partType,
+     int partTypeId,
      decimal price,
      DateTime date 
 );

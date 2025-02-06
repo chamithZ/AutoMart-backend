@@ -1,8 +1,10 @@
 using System;
+using System.Data.Common;
 using AutoStore.Data;
 using AutoStore.DTOs;
 using AutoStore.Entities;
 using AutoStore.Mappings;
+using Microsoft.EntityFrameworkCore;
 
 namespace AutoStore.EndPoints;
 
@@ -47,9 +49,12 @@ ItemDeatilsDTO itemDeatilsDTO= part.ToItemDetialsDTO();
  return part is null? Results.NotFound() : Results.Ok(itemDeatilsDTO);
  }).WithName(getGame);
 
-//get all parts
-app.MapGet("items" ,()=> parts);
 
+app.MapGet("/",(AutoStoreContext dbContext)=>
+        dbContext.Parts
+        .Include(part =>part.PartType)
+        .Select(part=>part.ToItemDetialsDTO())
+        .AsNoTracking());
 
 //create parts
 app.MapPost("parts",(CreateItem newItem,AutoStoreContext dbContext )=>{
@@ -65,35 +70,27 @@ app.MapPost("parts",(CreateItem newItem,AutoStoreContext dbContext )=>{
 
 
 //update part
-app.MapPut("parts/{id}",(int id,UpdateItemDTO updateItem)=>{
+app.MapPut("parts/{id}",(int id,UpdateItemDTO updateItem,AutoStoreContext dbContext)=>{
     var index = parts.FindIndex(part=> part.id==id);
-
-    if(index==-1)
+    var existingItem= dbContext.Parts.Find(id);
+    if(existingItem is null)
     {
         return Results.NotFound();
     }
     
-    parts[index]= new ItemDTO(
-        id,
-        updateItem.name,
-        updateItem.partType.Name,
-        updateItem.price,
-        updateItem.date
-    );
+   dbContext.Entry(existingItem)
+    .CurrentValues
+    .SetValues(updateItem.ToEntity(id));
 
+dbContext.SaveChanges();
     return Results.NoContent();
 });
 
-app.MapDelete("items/{id}", (int id) =>
+app.MapDelete("items/{id}", (int id, AutoStoreContext dbContext) =>
 {
-    var itemToRemove = parts.FirstOrDefault(item => item.id == id);
-    if (itemToRemove != null)
-    {
-        parts.Remove(itemToRemove);
-        return Results.NoContent(); // Correctly returns an HTTP 204 response
-    }
-
-    return Results.NotFound(); // If the item is not found, return HTTP 404
+    dbContext.Parts.Where(part =>part.Id==id)
+    .ExecuteDelete();
+    return Results.NoContent(); // If the item is not found, return HTTP 404
 });
 
 return app;
