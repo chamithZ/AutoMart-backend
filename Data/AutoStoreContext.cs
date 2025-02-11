@@ -14,6 +14,8 @@ namespace AutoStore.Data
         public DbSet<Part> Parts => Set<Part>();
         public DbSet<PartType> PartTypes => Set<PartType>();
 
+        public DbSet<Order> Orders=> Set<Order>();
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PartType>().HasData(

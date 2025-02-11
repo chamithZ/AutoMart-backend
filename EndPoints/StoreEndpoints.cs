@@ -13,34 +13,11 @@ public static class StoreEndpoints
     
 const String getGame="GetPart";
 
-private static readonly List<ItemDTO> parts = new List<ItemDTO>
-{
-    new ItemDTO(
-        1,
-        "Brake pads",
-        "brake",
-        2000.00M,
-        new DateTime(2024, 12, 02)
-    ),
-    new ItemDTO(
-        2,
-        "Ac cable",
-        "brake",
-        3000.00M,
-        new DateTime(2024, 12, 02)
-    ),
-    new ItemDTO(
-        3,
-        "brake",
-        "Brake cable",
-        3500.00M,
-        new DateTime(2024, 12, 02)
-    )
-};
 
-public static WebApplication MapStoreEndpoints(this WebApplication app){
+
+public static WebApplication MapStoreEndpoints(this WebApplication app)
+{
     //get part
-    
 app.MapGet("parts/{id}",async (int id, AutoStoreContext dbContext) =>{
 
  Part? part =await dbContext.Parts.FindAsync(id);
@@ -74,7 +51,7 @@ app.MapPost("parts",async (CreateItem newItem,AutoStoreContext dbContext )=>{
 
 //update part
 app.MapPut("parts/{id}",async (int id,UpdateItemDTO updateItem,AutoStoreContext dbContext)=>{
-    var index = parts.FindIndex(part=> part.id==id);
+   // var index = parts.FindIndex(part=> part.id==id);
     var existingItem= await dbContext.Parts.FindAsync(id);
     if(existingItem is null)
     {
