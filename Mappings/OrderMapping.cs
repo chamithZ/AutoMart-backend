@@ -11,7 +11,7 @@ public static Order ToEntity(this CreateOrderDTO order)
 {
     return new Order
     {
-        partId = order.itemId,
+        partId = order.partId,
         quantity = order.quantity,
         totalPrice = order.totalPrice,
         date = order.date   
@@ -20,16 +20,18 @@ public static Order ToEntity(this CreateOrderDTO order)
 
 public static OrderDetailsDTO ToDTO(this Order order)
 {
-        return new OrderDetailsDTO
-        {
-        id = order.orderId,
-        itemId = order.partId,
+        return new OrderDetailsDTO( order.orderId, order.partId, order.quantity, order.totalPrice, order.date);
+}
+
+public static Order ToEntity(this UpdateOrderDTO order,int id)
+{
+    return new Order
+    {
+        orderId = id,
+        partId = order.partId,
         quantity = order.quantity,
         totalPrice = order.totalPrice,
         date = order.date
     };
 }
-
-
-
 }

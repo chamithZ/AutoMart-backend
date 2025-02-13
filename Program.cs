@@ -17,6 +17,7 @@ var app = builder.Build();
 // Map the endpoints
 app.MapStoreEndpoints();
 app.MapsPartTypeEndpoints();
+app.MapOrderEndpoints(); 
 
 await app.MigrateDbAsync();
 // Run the app

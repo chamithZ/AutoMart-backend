@@ -73,6 +73,7 @@ app.MapDelete("items/{id}", async(int id, AutoStoreContext dbContext) =>
     return Results.NoContent(); // If the item is not found, return HTTP 404
 });
 
+
 return app;
 }
 }

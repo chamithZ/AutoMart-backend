@@ -3,6 +3,7 @@ using System;
 using AutoStore.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AutoStore.Data.Migrations
 {
     [DbContext(typeof(AutoStoreContext))]
-    partial class AutoStoreContextModelSnapshot : ModelSnapshot
+    [Migration("20250212151213_Update")]
+    partial class Update
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.1");
@@ -36,8 +39,6 @@ namespace AutoStore.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("orderId");
-
-                    b.HasIndex("partId");
 
                     b.ToTable("Orders");
                 });
@@ -101,17 +102,6 @@ namespace AutoStore.Data.Migrations
                             Id = 4,
                             Name = "Brakes"
                         });
-                });
-
-            modelBuilder.Entity("AutoStore.Entities.Order", b =>
-                {
-                    b.HasOne("AutoStore.Entities.Part", "Part")
-                        .WithMany()
-                        .HasForeignKey("partId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Part");
                 });
 
             modelBuilder.Entity("AutoStore.Entities.Part", b =>
